@@ -1,0 +1,8 @@
+---
+# defaults for grub_config role
+
+scripts_dir: /scripts
+grub_src: grub_config.txt
+grub_template: "{{ scripts_dir }}/grub_config.txt"
+grub_dst: /etc/default/grub
+grub_cfg: /boot/grub2/grub.cfg
