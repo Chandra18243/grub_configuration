@@ -1,0 +1,36 @@
+---
+- name: "Ensure scripts directory exists"
+  file:
+    path: "{{ scripts_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: "Copy GRUB template to scripts dir"
+  copy:
+    src: "{{ grub_src }}"
+    dest: "{{ scripts_dir }}/{{ grub_src }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "Backup existing /etc/default/grub"
+  copy:
+    src: "{{ grub_dst }}"
+    dest: "{{ grub_dst }}.bak.{{ ansible_date_time.epoch }}"
+    remote_src: yes
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "Overwrite /etc/default/grub with our template"
+  copy:
+    src: "{{ grub_template }}"
+    dest: "{{ grub_dst }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "Regenerate grub.cfg"
+  command: grub2-mkconfig -o "{{ grub_cfg }}"
+  args:
+    warn: false
